@@ -28,11 +28,71 @@ other formats), is still supported by most of the LCA tools, ...
 
 ## Usage
 
-FIXME
+## Format Details
 
-## License
+### The Root Element
+An EcoSpold data set can contain multiple process data sets 
 
-Copyright © 2018 FIXME
+### Inputs and Outputs
+A process can have inputs and outputs of flows which are called
+_exchanges_. You can call the `input` and `output` functions to
+create such exchanges with the following attributes:
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+* `:type` - the flow type 
+* `:name` - the flow name
+* `:category` - the flow category
+* `:sub-category` - the sub-category of the flow
+* `:amount` - the amount of the exchange
+* `:unit` - the unit of the exchange
+* `:location` - an optional location code for the flow
+* `:comment` - some text to describe the exchange
+
+The `:type` attribute indicates wether the flow is a _product_,
+_co-product_, _waste_, or _elementary flow_. We identify this type by
+the first letter of the string or symbol you pass into this field
+(ignoring the case):
+
+* `"p"` -> product
+* `"c"` -> co-product (in EcoSpold 1 you should have only one 
+  (reference) product; the other product output should be tagged as
+  co-products 
+* `"e"` -> elementary flow
+* `"w"` -> waste flow
+
+If nothing matches, the flow type is set to _elementary flow_ by
+default. Thus all these values will result to _product_ as type:
+`"p"`, `Product flow`, `:product`. Here is an example of a product
+output:
+
+```clojure
+(output
+  :type      :product
+  :name      "Steel"
+  :category  "metals"
+  :amount    1.0
+  :unit      "kg")
+```
+
+Note that we support different flow types but in general you should
+only use products and elementary flows in EcoSpold 1 data sets to
+be compatible with LCA tools.
+
+Instead of the input and output function, you can also use the
+`exchange` function which takes an additional `:direction`
+attribute. This can be again a symbol and or string and we also take
+here just the first letter to identify the direction:
+
+* `"i"` -> input
+* `"o"` -> output
+
+. This is equivalent to the example above:
+
+```clojure
+(exchange
+  :direction :output
+  :type      :product
+  :name      "Steel"
+  :category  "metals"
+  :amount    1.0
+  :unit      "kg")
+```
