@@ -29,16 +29,50 @@ it is still a beautiful simple LCA data format when you replace the XML with
 ## Usage
 
 ## Format Details
+In the following
 
-### The Root Element
-An EcoSpold data set can contain multiple process data sets 
+### Data sets
+
+An EcoSpold data set can contain multiple process data sets which you just pass
+into the `eco-spold` function:
+
+```clojure
+(eco-spold
+  (data-set
+    (qref :name "Steel production"))
+  (data-set
+    (qref :name "Electricity production")))
+```
+
+### The reference function
+
+* `:name` - the name of the output product; or process name
+* `:category` - the process or product category
+* `:sub-category` - the sub-category of the process or product
+* `:amount` - the amount of the reference product
+* `:unit` - the unit of the reference product
+* `:comment` - a general comment
+
+```clojure
+(qref
+  :name "Steel production"
+  :amount 1.0
+  :unit "kg")
+```
+
+### Geography
+
+* `:location` - the location code
+* `:comment` - description of the location
+
+
 
 ### Inputs and Outputs
 A process can have inputs and outputs of flows which are called
 _exchanges_. You can call the `input` and `output` functions to
 create such exchanges with the following attributes:
 
-* `:type` - the flow type 
+* `:type` - the flow type
 * `:name` - the flow name
 * `:category` - the flow category
 * `:sub-category` - the sub-category of the flow
@@ -53,9 +87,9 @@ the first letter of the string or symbol you pass into this field
 (ignoring the case):
 
 * `"p"` -> product
-* `"c"` -> co-product (in EcoSpold 1 you should have only one 
+* `"c"` -> co-product (in EcoSpold 1 you should have only one
   (reference) product; the other product output should be tagged as
-  co-products 
+  co-products
 * `"e"` -> elementary flow
 * `"w"` -> waste flow
 

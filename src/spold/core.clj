@@ -1,7 +1,8 @@
 (ns spold.core
   (:gen-class)
   (:require [clojure.data.xml :as xml]
-            [clojure.string :as string]))
+            [clojure.string :as string]
+            [clojure.java.io :as io]))
 
 
 (defn- qn
@@ -25,6 +26,13 @@
 (defn pretty-print
   [e]
   (println (as-string e)))
+
+
+(defn write
+  "Write the XML elements to the given file."
+  [espold file]
+  (with-open [writer (io/writer file :encoding "utf-8")]
+    (xml/emit data writer)))
 
 
 (defn first-letter
@@ -102,7 +110,7 @@
       (elem
        :flowData
        {}
-       exchanges))))     
+       exchanges))))
 
 
 (defn qref
@@ -149,7 +157,7 @@
     :location       location
     :generalComment comment}
    (exchange-group type direction)))
-   
+
 
 
 (defn input
@@ -160,4 +168,3 @@
 (defn output
   [& {:as atts}]
   (apply exchange (flatten (vec (assoc atts :direction :output)))))
-
