@@ -56,7 +56,7 @@
 
 (defn filter-elems
   [tag-name elems]
-  elems)
+  (filter #(= tag-name (xml/qname-local (:tag %1))) elems))
 
 
 (defn flow-type
@@ -86,10 +86,23 @@
 
 (defn data-set
   [& content]
-  (elem
-   :dataset
-   {}
-   content))
+  (let [qref- (first (filter-elems "referenceFunction" content))
+        proc-info (map strip-nils (filter some? [qref-]))
+        exchanges (map strip-nils (filter-elems "exchange" content))]
+    (elem
+      :dataset
+      {}
+      (elem
+        :metaInformation
+        {}
+        (elem
+          :processInformation
+          {}
+          proc-info))
+      (elem
+       :flowData
+       {}
+       exchanges))))     
 
 
 (defn qref
@@ -136,7 +149,7 @@
     :location       location
     :generalComment comment}
    (exchange-group type direction)))
-
+   
 
 
 (defn input
@@ -147,3 +160,4 @@
 (defn output
   [& {:as atts}]
   (apply exchange (flatten (vec (assoc atts :direction :output)))))
+
