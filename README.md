@@ -3,8 +3,8 @@ This is a small Clojure library for writing
 [EcoSpold 1](https://www.ecoinvent.org/database/older-versions/ecoinvent-version-2/methodology-of-ecoinvent-2/ecospold1/ecospold1.html)
 data sets. While EcoSpold 1 is maybe outdated and was replaced by
 [EcoSpold 2](https://www.ecoinvent.org/data-provider/data-provider-toolkit/ecospold2/ecospold2.html);
-it is still a beautiful simple LCA data format (especially when looking on the
-other formats), is still supported by most of the LCA tools, ...
+it is still a beautiful simple LCA data format when you replace the XML with
+[s-expressions](https://en.wikipedia.org/wiki/S-expression):
 
 ```clojure
 (eco-spold
