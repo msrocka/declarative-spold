@@ -66,8 +66,11 @@
 
 
 (defn data-set
-  []
-  (elem :dataset))
+  [& content]
+  (elem
+   :dataset
+   {}
+   content))
 
 
 (defn qref
@@ -99,11 +102,31 @@
       :else                             (elem :outputGroup {} 4))))
 
 
-(defn exchange [& {:keys [type name category sub-category
-                          amount unit comment direction]
-                    :as attrs}]
-  nil)
+(defn exchange
+  [& {:keys [type name category sub-category location
+             amount unit comment direction number]
+      :as atts}]
+  (println atts)
+  (elem
+   :exchange
+   {:number         number
+    :name           name
+    :category       category
+    :subCategory    sub-category
+    :meanValue      amount
+    :unit           unit
+    :location       location
+    :generalComment comment}
+   (exchange-group type direction)))
+   
 
 
 (defn input
-  [& {:keys []}])
+  [& {:as atts}]
+  (apply exchange (flatten (vec (assoc atts :direction :input)))))
+
+
+(defn output
+  [& {:as atts}]
+  (apply exchange (flatten (vec (assoc atts :direction :output)))))
+
