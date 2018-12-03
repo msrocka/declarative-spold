@@ -40,6 +40,25 @@
       :else nil)))
 
 
+(defn strip-nils
+  "Remove the keys with nil-values from the attributes of the
+   given element."
+  [el]
+  (if (nil? el)
+    nil
+    (assoc el :attrs
+      (reduce
+        (fn [next-m akey]
+          (if (nil? (akey next-m)) (dissoc next-m akey) next-m))
+        (:attrs el)
+        (keys (:attrs el))))))
+
+
+(defn filter-elems
+  [tag-name elems]
+  elems)
+
+
 (defn flow-type
   "Infer the flow type from the given value."
   [v]
@@ -106,7 +125,6 @@
   [& {:keys [type name category sub-category location
              amount unit comment direction number]
       :as atts}]
-  (println atts)
   (elem
    :exchange
    {:number         number
@@ -118,7 +136,7 @@
     :location       location
     :generalComment comment}
    (exchange-group type direction)))
-   
+
 
 
 (defn input
@@ -129,4 +147,3 @@
 (defn output
   [& {:as atts}]
   (apply exchange (flatten (vec (assoc atts :direction :output)))))
-
