@@ -18,21 +18,29 @@
   ([tag attrs & content] (xml/element (qn tag) attrs content)))
 
 
-(defn as-string
+(defn pretty-string
   [e]
   (xml/indent-str e))
 
 
-(defn pretty-print
+(defn print-pretty
   [e]
-  (println (as-string e)))
+  (println (pretty-string e)))
 
 
 (defn write
   "Write the XML elements to the given file."
   [espold file]
   (with-open [writer (io/writer file :encoding "utf-8")]
-    (xml/emit data writer)))
+    (xml/emit espold writer)))
+
+
+(defn write-pretty
+  "Write the XML elements to the given file in a pretty format.
+   Note that this function is not intended for heavy production use."
+  [espold file]
+  (with-open [writer (io/writer file :encoding "utf-8")]
+    (.write writer (pretty-string espold))))
 
 
 (defn first-letter

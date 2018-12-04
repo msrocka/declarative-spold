@@ -1,8 +1,8 @@
 # declarative-spold
 This is a small Clojure library for writing
 [EcoSpold 1](https://www.ecoinvent.org/database/older-versions/ecoinvent-version-2/methodology-of-ecoinvent-2/ecospold1/ecospold1.html)
-data sets. While EcoSpold 1 is maybe outdated and was replaced by
-[EcoSpold 2](https://www.ecoinvent.org/data-provider/data-provider-toolkit/ecospold2/ecospold2.html);
+data sets in a declarative style. While EcoSpold 1 is maybe outdated and was
+replaced by [EcoSpold 2](https://www.ecoinvent.org/data-provider/data-provider-toolkit/ecospold2/ecospold2.html)
 it is still a beautiful simple LCA data format when you replace the XML with
 [s-expressions](https://en.wikipedia.org/wiki/S-expression):
 
@@ -25,8 +25,72 @@ it is still a beautiful simple LCA data format when you replace the XML with
       :amount  2.0   :unit "kg")))
 ```
 
+This example may looks like the declaration of a data structure but these are
+function calls where the result of an inner function call is passed as an
+argument to the outer call. The result of this call tree can be then bound to
+a variable, written to an XML file, or just printed in a pretty format:
+
+```clojure
+(def data
+  (eco-spold
+    (data-set
+      (qref :name "Steel production")
+      (output :type :p :name "Steel" :amount 1.0 :unit "kg"))))
+
+;; write the data to a file
+(write data "path/to/file.xml")
+;; you can also write them in a pretty format
+(write-pretty data "path/to/file.xml")
+;; or just print the XML ...
+(print-pretty data)
+```
+
+The four lines above will produce the following XML which you can directly
+import into openLCA (note that this is not valid against the EcoSpold 1 schema
+definition but openLCA happily accepts this):
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<ecoSpold xmlns="http://www.EcoInvent.org/EcoSpold01">
+  <dataset>
+    <metaInformation>
+      <processInformation>
+        <referenceFunction name="Steel production"/>
+      </processInformation>
+    </metaInformation>
+    <flowData>
+      <exchange name="Steel" meanValue="1.0" unit="kg">
+        <outputGroup>0</outputGroup>
+      </exchange>
+    </flowData>
+  </dataset>
+</ecoSpold>
+```
 
 ## Usage
+You could directly create data sets in an interactive REPL session: install
+[Leiningen](https://leiningen.org/), checkout and navigate to this project, and
+start a REPL:
+
+```bash
+cd ../path/to/declarative-spold
+lein repl
+```
+
+Then you can use it like this:
+
+```clojure
+user=> (use 'spold.core)
+user=> (def data (eco-spold (data-set)))  ;; etc.
+user=> (print-pretty data)
+```
+
+If you want to use it in your clojure projects you can add it to your
+dependencies with the following coordinates:
+
+```clojure
+;; TODO
+```
 
 ## Format Details
 In the following
