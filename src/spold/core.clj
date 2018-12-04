@@ -103,7 +103,8 @@
 (defn data-set
   [& content]
   (let [qref- (first (filter-elems "referenceFunction" content))
-        proc-info (map strip-nils (filter some? [qref-]))
+        geo-  (first (filter-elems "geography" content))
+        proc-info (map strip-nils (filter some? [qref- geo-]))
         exchanges (map strip-nils (filter-elems "exchange" content))]
     (elem
       :dataset
@@ -131,6 +132,14 @@
      :category category
      :subCategory sub-category
      :generalComment comment}))
+
+
+(defn geography
+  [& {:keys [location comment]}]
+  (elem
+    :geography
+    {:location location
+     :text comment}))
 
 
 (defn exchange-group

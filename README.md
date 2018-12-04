@@ -93,12 +93,12 @@ dependencies with the following coordinates:
 ```
 
 ## Format Details
-In the following
+We currently only support a subset of the EcoSpold 1 format which is described
+in sections below.
 
 ### Data sets
-
-An EcoSpold data set can contain multiple process data sets which you just pass
-into the `eco-spold` function:
+An EcoSpold data set can contain multiple process data sets which the `eco-spold`
+function takes as arguments:
 
 ```clojure
 (eco-spold
@@ -106,6 +106,29 @@ into the `eco-spold` function:
     (qref :name "Steel production"))
   (data-set
     (qref :name "Electricity production")))
+```
+
+The attributes are passed as key-value pairs into the functions (e.g.
+`:name "Steel"`). Most of these attributes have the same name as in the XML
+format but we rename some of them for to make them more Lispy (e.g.
+`sub-category` instead of `subCategory`) or easier to remember (e.g. always
+`comment` instead of `generalComment` or `text`). Also the elements/arguments
+can be passed in any order to a function, e.g.
+
+```clojure
+(eco-spold
+  (data-set
+    (qref :name "Steel production")
+    (geography :location "GLO")))
+```
+
+will produce the same output as
+
+```clojure
+(eco-spold
+  (data-set
+    (geography :location "GLO")
+    (qref :name "Steel production")))
 ```
 
 ### The reference function
@@ -125,11 +148,17 @@ into the `eco-spold` function:
 ```
 
 ### Geography
+Geographical information of a process can be described with the following
+attributes:
 
 * `:location` - the location code
 * `:comment` - description of the location
 
-
+```clojure
+(geography
+  :location "CH"
+  :comment  "A typical process location")
+```
 
 ### Inputs and Outputs
 A process can have inputs and outputs of flows which are called
