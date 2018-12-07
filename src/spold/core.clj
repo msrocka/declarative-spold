@@ -176,7 +176,6 @@
    (exchange-group type direction)))
 
 
-
 (defn input
   [& {:as atts}]
   (apply exchange (flatten (vec (assoc atts :direction :input)))))
